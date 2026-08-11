@@ -14,8 +14,11 @@ export interface PlayGamesPlayerSummary {
 
 export interface PlayGamesBridgeResult {
   available: boolean;
+  configured?: boolean;
   authenticated?: boolean;
   status: string;
+  method?: string;
+  feature?: string;
   playServicesStatus?: number;
   player?: PlayGamesPlayerSummary | null;
   payload?: Record<string, unknown> | null;
@@ -52,4 +55,8 @@ export interface FlagGamePlayGamesPlugin {
   }): Promise<PlayGamesBridgeResult>;
   openLeaderboards(): Promise<PlayGamesBridgeResult>;
   openAchievements(): Promise<PlayGamesBridgeResult>;
+  requestServerSideAccess(options: {
+    webClientId: string;
+    forceRefreshToken?: boolean;
+  }): Promise<{ serverAuthCode: string }>;
 }

@@ -1,0 +1,16 @@
+-- Merging decision tree log ---
+manifest
+ADDED from D:\Bandeiras\plugins\capacitor-google-auth\android\build\intermediates\tmp\ProcessLibraryManifest\debug\tempAndroidManifest15773184465276275553.xml:2:13-83
+INJECTED from D:\Bandeiras\plugins\capacitor-google-auth\android\build\intermediates\tmp\ProcessLibraryManifest\debug\tempAndroidManifest15773184465276275553.xml:2:13-83
+	package
+		INJECTED from D:\Bandeiras\plugins\capacitor-google-auth\android\build\intermediates\tmp\ProcessLibraryManifest\debug\tempAndroidManifest15773184465276275553.xml
+	xmlns:android
+		ADDED from D:\Bandeiras\plugins\capacitor-google-auth\android\build\intermediates\tmp\ProcessLibraryManifest\debug\tempAndroidManifest15773184465276275553.xml:2:23-81
+uses-sdk
+INJECTED from D:\Bandeiras\plugins\capacitor-google-auth\android\build\intermediates\tmp\ProcessLibraryManifest\debug\tempAndroidManifest15773184465276275553.xml reason: use-sdk injection requested
+INJECTED from D:\Bandeiras\plugins\capacitor-google-auth\android\build\intermediates\tmp\ProcessLibraryManifest\debug\tempAndroidManifest15773184465276275553.xml
+INJECTED from D:\Bandeiras\plugins\capacitor-google-auth\android\build\intermediates\tmp\ProcessLibraryManifest\debug\tempAndroidManifest15773184465276275553.xml
+	android:targetSdkVersion
+		INJECTED from D:\Bandeiras\plugins\capacitor-google-auth\android\build\intermediates\tmp\ProcessLibraryManifest\debug\tempAndroidManifest15773184465276275553.xml
+	android:minSdkVersion
+		INJECTED from D:\Bandeiras\plugins\capacitor-google-auth\android\build\intermediates\tmp\ProcessLibraryManifest\debug\tempAndroidManifest15773184465276275553.xml

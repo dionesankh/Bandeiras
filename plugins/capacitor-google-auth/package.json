@@ -1,0 +1,20 @@
+{
+  "name": "@flaggame/capacitor-google-auth",
+  "version": "0.1.0",
+  "description": "Capacitor plugin for modern Google Authentication using Credential Manager.",
+  "main": "dist/plugin.cjs.js",
+  "module": "dist/esm/index.js",
+  "types": "dist/esm/index.d.ts",
+  "capacitor": {
+    "android": {
+      "src": "android"
+    }
+  },
+  "files": [
+    "android",
+    "src",
+    "dist"
+  ],
+  "license": "UNLICENSED",
+  "private": true
+}

@@ -4,1160 +4,502 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <base href="../">
-
   <title>Flag Game</title>
-
   <link rel="icon" type="image/png" href="assets/images/logo.png">
-  <link rel="apple-touch-icon" href="assets/images/logo.png">
-  <meta property="og:title" content="Flag Game">
-  <meta property="og:image" content="assets/images/logo.png">
-
   <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body class="app-loading">
 
-  <div class="app-loader" id="app-loader" aria-live="polite">
+  <div id="appSplash" class="app-splash" aria-hidden="true">
+    <img src="assets/images/logo.png" alt="" class="app-splash__logo">
+  </div>
+
+  <script>
+    // Emergency Splash and Loader Remover
+    (function() {
+      const hideSplash = function() {
+        const splash = document.getElementById('appSplash');
+        if (splash) {
+          splash.classList.add('is-hidden');
+          setTimeout(function() { if (splash.parentNode) splash.remove(); }, 500);
+        }
+        // Forçar app-ready no body para esconder o loader circular
+        document.body.classList.add('app-ready');
+      };
+
+      // Se em 6 segundos os scripts principais não carregarem, forçamos a entrada
+      setTimeout(hideSplash, 6000);
+    })();
+  </script>
+
+  <div class="app-loader" id="app-loader">
     <div></div>
     <span data-i18n="loading">Carregando...</span>
   </div>
 
-  <div
-    class="achievement-toast"
-    id="achievement-toast"
-    aria-live="polite"
-  ></div>
+  <div class="onboarding-overlay" id="onboarding-overlay">
+    <div class="onboarding-card">
+      <div class="onboarding-step ativa" id="onboarding-step-login">
+        <h2 data-i18n="onboardingLoginTitle">Bem-vindo!</h2>
+        <p data-i18n="onboardingLoginDesc">Conecte sua conta para salvar seu progresso e entrar no ranking global.</p>
+        <button class="btn-main" id="btn-onboarding-login" data-i18n="loginWithGoogle">Login com Google</button>
+        <button class="btn-secundario" id="btn-onboarding-skip-login" data-i18n="onboardingSkip">Pular</button>
+      </div>
 
-  <main class="app">
+      <div class="onboarding-step" id="onboarding-step-language">
+        <h2 data-i18n="onboardingLanguageTitle">Escolha o Idioma</h2>
+        <p data-i18n="onboardingLanguageDesc">Selecione seu idioma preferido.</p>
+        <select id="onboarding-idioma">
+          <option value="de">🇩🇪 Deutsch</option>
+          <option value="en">🇺🇸 English</option>
+          <option value="es">🇪🇸 Español</option>
+          <option value="fr">🇫🇷 Français</option>
+          <option value="id">🇮🇩 Indonesia</option>
+          <option value="it">🇮🇹 Italiano</option>
+          <option value="nl">🇳🇱 Nederlands</option>
+          <option value="pl">🇵🇱 Polski</option>
+          <option value="pt-BR">🇧🇷 Português</option>
+          <option value="tr">🇹🇷 Türkçe</option>
+          <option value="vi">🇻🇳 Tiếng Việt</option>
+          <option value="ru">🇷🇺 Русский</option>
+          <option value="uk">🇺🇦 Українська</option>
+          <option value="ar">🇸🇦 العربية</option>
+          <option value="hi">🇮🇳 हिन्दी</option>
+          <option value="bn">🇧🇩 বাংলা</option>
+          <option value="th">🇹🇭 ไทย</option>
+          <option value="ja">🇯🇵 日本語</option>
+          <option value="ko">🇰🇷 한국어</option>
+          <option value="zh-CN">🇨🇳 中文</option>
+        </select>
+        <button class="btn-main" id="btn-onboarding-next-lang" data-i18n="continue">Continuar</button>
+      </div>
 
+      <div class="onboarding-step" id="onboarding-step-nickname">
+        <h2 data-i18n="createProfileTitle">Criar Perfil</h2>
+        <p data-i18n="onboardingNicknameDesc">Como você quer ser chamado no ranking mundial?</p>
+        <input type="text" id="onboarding-nickname-input" maxlength="24" placeholder="Nickname" data-i18n-placeholder="nicknamePlaceholder">
+        <span id="onboarding-nickname-feedback" style="color:red; font-size:12px; display:block; margin-top:-10px; margin-bottom:15px;"></span>
+        <button class="btn-main" id="btn-onboarding-finish" data-i18n="onboardingFinish">Começar</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="app">
     <header class="topo">
-      <div class="logo">
-        <a
-          href="#home"
-          class="logo-home-link"
-          id="logo-home-link"
-          aria-label="Flag Game - Home"
-          data-i18n-aria-label="homeBrandAria"
-        >
-          <img
-            src="assets/images/logo.png"
-            alt="Flag Game"
-            class="brand-logo"
-          >
+      <div class="logo-center">
+        <a href="#home" id="logo-home-link">
+          <img src="assets/images/logo.png" alt="Flag Game" class="brand-logo">
         </a>
       </div>
 
-      <div class="topo-controles">
-
-      <button
-        class="sound-toggle"
-        id="btn-som"
-        type="button"
-        aria-label="Ativar sons"
-        data-i18n-aria-label="soundOnLabel"
-        aria-pressed="false"
-      >
-        🔇
-      </button>
-
-      <select
-        id="idioma"
-        aria-label="Selecionar idioma"
-        data-i18n-aria-label="languageSelectLabel">
-  <option value="pt-BR">🇧🇷 Português</option>
-  <option value="en">🇺🇸 English</option>
-  <option value="es">🇪🇸 Español</option>
-  <option value="fr">🇫🇷 Français</option>
-  <option value="de">🇩🇪 Deutsch</option>
-  <option value="it">🇮🇹 Italiano</option>
-  <option value="nl">🇳🇱 Nederlands</option>
-  <option value="pl">🇵🇱 Polski</option>
-  <option value="ru">🇷🇺 Русский</option>
-  <option value="uk">🇺🇦 Українська</option>
-  <option value="tr">🇹🇷 Türkçe</option>
-  <option value="ar">🇸🇦 العربية</option>
-  <option value="hi">🇮🇳 हिन्दी</option>
-  <option value="bn">🇧🇩 বাংলা</option>
-  <option value="zh-CN">🇨🇳 中文</option>
-  <option value="ja">🇯🇵 日本語</option>
-  <option value="ko">🇰🇷 한국어</option>
-  <option value="id">🇮🇩 Bahasa Indonesia</option>
-  <option value="vi">🇻🇳 Tiếng Việt</option>
-  <option value="th">🇹🇭 ไทย</option>
-</select>
-
+      <div class="topo-right">
+        <button id="btn-menu" class="menu-trigger" aria-label="Abrir menu" data-i18n-aria-label="openMenu">
+          <div class="hamburger-box">
+            <div class="hamburger-inner"></div>
+          </div>
+        </button>
       </div>
     </header>
 
-    <section class="inicio">
-      <h1 data-i18n="homeTitle">Aprenda as bandeiras do mundo</h1>
+    <main style="flex: 1; display: flex; flex-direction: column;">
 
-      <p data-i18n="homeSubtitle">
-  Teste seus conhecimentos sobre os 195 países.
-</p>
+      <section class="inicio ativa">
+        <h1 data-i18n="homeTitle" style="text-align: center;">Aprenda as bandeiras do mundo</h1>
+        <p data-i18n="homeSubtitle" style="text-align: center; color: var(--color-text-muted); margin-bottom: 20px;">Teste seus conhecimentos sobre os 195 países.</p>
 
-      <div class="modos">
+        <div class="modos">
+          <button class="modo" id="btn-continentes">
+            <span class="icone">🌎</span>
+            <div class="modo-info">
+              <strong data-i18n="modeContinent">Por continente</strong>
+              <small data-i18n="modeContinentDescription">Aprenda com alternativas</small>
+            </div>
+          </button>
 
-  <button class="modo" id="btn-continentes">
-    <span class="icone">🌎</span>
-    <strong data-i18n="modeContinent">Por continente</strong>
-    <small data-i18n="modeContinentDescription">
-      Aprenda com alternativas
-    </small>
-  </button>
+          <button class="modo" id="btn-mundo">
+            <span class="icone">🌍</span>
+            <div class="modo-info">
+              <strong data-i18n="modeWorld">Mundo inteiro</strong>
+              <small data-i18n="modeWorldDescription">Escolha a quantidade</small>
+            </div>
+          </button>
 
-  <button class="modo" id="btn-mundo">
-    <span class="icone">🌍</span>
-    <strong data-i18n="modeWorld">Mundo inteiro</strong>
-    <small data-i18n="modeWorldDescription">
-      Desafie seus conhecimentos
-    </small>
-  </button>
+          <button class="modo" id="btn-experiente">
+            <span class="icone">🏆</span>
+            <div class="modo-info">
+              <strong data-i18n="worldChallengeTitle">Desafio Mundial</strong>
+              <small data-i18n="worldChallengeModeSubtitle">O teste definitivo</small>
+            </div>
+          </button>
 
-  <button class="modo" id="btn-experiente">
-    <span class="icone">🏆</span>
-    <strong data-i18n="worldChallengeTitle">Desafio Mundial</strong>
-    <small data-i18n="worldChallengeModeSubtitle">
-      Modo Experiente
-    </small>
-  </button>
-
-</div>
-
-      <div
-        class="cloud-sync-status"
-        id="cloud-sync-status"
-        role="status"
-        aria-live="polite"
-        data-requires-capability="supportsCloudSave"
-        hidden
-      >
-        <span data-i18n="cloudSaveLocal">Salvo localmente</span>
-      </div>
-
-      <div class="challenge-entry">
-        <strong data-i18n="challengeFriends">Desafio entre amigos</strong>
-        <div>
-          <input
-            type="text"
-            id="challenge-code-input"
-            placeholder="FG-W20-82K7P"
-            autocomplete="off"
-            spellcheck="false"
-            aria-label="Código do desafio"
-            data-i18n-aria-label="challengeCodeLabel"
-          >
-          <button
-            class="btn-secundario"
-            id="btn-play-challenge"
-            data-i18n="playChallenge"
-          >
-            Jogar desafio
+          <button class="modo" id="btn-amigos">
+            <span class="icone">🤝</span>
+            <div class="modo-info">
+              <strong data-i18n="challengeFriends">Desafio entre Amigos</strong>
+              <small data-i18n="challengeFriendsDescription">Use um código</small>
+            </div>
           </button>
         </div>
-        <span
-          id="challenge-entry-feedback"
-          role="status"
-          aria-live="polite"
-        ></span>
-      </div>
-    </section>
-<section class="tela-mundo" id="tela-mundo">
-
-  <button class="voltar" id="btn-voltar-mundo" data-i18n="back">
-    ← Voltar
-  </button>
-
-  <h1 data-i18n="worldGameTitle">
-    Mundo inteiro
-  </h1>
-
-  <p data-i18n="worldGameSubtitle">
-    Quantas bandeiras você quer tentar acertar?
-  </p>
-
-  <div class="opcoes-quantidade">
-
-    <button class="quantidade" data-quantidade="10">
-      <strong>10</strong>
-      <span data-i18n="flags">bandeiras</span>
-    </button>
-
-    <button class="quantidade" data-quantidade="20">
-      <strong>20</strong>
-      <span data-i18n="flags">bandeiras</span>
-    </button>
-
-    <button class="quantidade" data-quantidade="50">
-      <strong>50</strong>
-      <span data-i18n="flags">bandeiras</span>
-    </button>
-
-    <button class="quantidade" data-quantidade="195">
-      <strong>195</strong>
-      <span data-i18n="flags">bandeiras</span>
-    </button>
-
-  </div>
-
-</section>
-
-<section
-  class="tela-experiente"
-  id="tela-experiente"
-  aria-labelledby="world-challenge-title"
->
-
-  <div class="experiente-topo">
-
-    <button
-      class="voltar"
-      id="btn-sair-experiente"
-      data-i18n="exit"
-    >
-      ← Sair
-    </button>
-
-    <div
-      class="experiente-status"
-      aria-label="Status do desafio"
-      data-i18n-aria-label="worldChallengeStatusLabel"
-    >
-
-      <div
-        class="experiente-vidas"
-        id="experiente-vidas"
-        aria-label="5 vidas restantes"
-      ></div>
-
-      <div class="experiente-progresso">
-        <span data-i18n="worldChallengeIdentified">Países identificados</span>
-        <strong id="experiente-progresso">0/195</strong>
-      </div>
-
-      <div class="experiente-cronometro">
-        <span data-i18n="time">Tempo</span>
-        <strong id="experiente-tempo">00:00</strong>
-      </div>
-
-    </div>
-
-  </div>
-
-  <div class="experiente-conteudo">
-
-    <div class="experiente-marca">
-      🏆 <span data-i18n="worldChallengeModeSubtitle">Modo Experiente</span>
-    </div>
-
-    <h1 id="world-challenge-title" data-i18n="worldChallengeTitle">
-      Desafio Mundial
-    </h1>
-
-    <p class="experiente-intro" data-i18n="worldChallengeTeaser">
-      Identifique as 195 bandeiras antes de perder suas cinco vidas.
-    </p>
-
-    <div class="experiente-bandeira">
-      <img
-        id="experiente-bandeira"
-        src=""
-        alt="Bandeira do país"
-        data-i18n-alt="flagImageAlt"
-      >
-    </div>
-
-    <p class="experiente-pergunta" data-i18n="worldChallengeQuestion">
-      Qual país corresponde a esta bandeira?
-    </p>
-
-    <div
-      class="experiente-alternativas"
-      id="experiente-alternativas"
-      aria-label="Alternativas"
-      data-i18n-aria-label="worldChallengeOptionsLabel"
-    ></div>
-
-    <div
-      class="experiente-feedback"
-      id="experiente-feedback"
-      role="status"
-      aria-live="polite"
-      aria-atomic="true"
-    ></div>
-
-    <p
-      class="experiente-restaurado"
-      id="experiente-restaurado"
-      role="status"
-      aria-live="polite"
-      hidden
-      data-i18n="worldChallengeRestored"
-    >
-      Partida restaurada neste dispositivo.
-    </p>
-
-    <div
-      class="world-continue-panel"
-      id="world-continue-panel"
-      hidden
-    >
-      <p
-        id="world-continue-message"
-        aria-live="polite"
-      ></p>
-      <button
-        class="btn-principal"
-        id="btn-world-continue"
-        type="button"
-        data-i18n="worldChallengeContinueButton"
-      >
-        Continuar por 30 moedas
-      </button>
-      <button
-        class="btn-secundario"
-        id="btn-world-finish"
-        type="button"
-        data-i18n="worldChallengeFinishButton"
-      >
-        Ver resultado
-      </button>
-    </div>
-
-    <button
-      class="btn-pular"
-      id="btn-pular"
-      data-i18n="worldChallengeSkip"
-    >
-      Não sei
-    </button>
-
-    <div class="experiente-estatisticas">
-
-      <div>
-        <strong id="experiente-acertos">0</strong>
-        <span data-i18n="worldChallengeIdentifiedShort">Identificados</span>
-      </div>
-
-      <div>
-        <strong id="experiente-puladas">0</strong>
-        <span data-i18n="skipped">Puladas</span>
-      </div>
-
-      <div>
-        <strong id="experiente-sequencia">0</strong>
-        <span data-i18n="streak">Sequência</span>
-      </div>
-
-    </div>
-
-  </div>
-
-</section>
-
-
-<section
-  class="tela-resultado-experiente"
-  id="tela-resultado-experiente"
->
-
-  <div class="resultado-experiente-card">
-
-    <div class="resultado-experiente-icone">🏆</div>
-
-    <h1 id="resultado-experiente-titulo" data-i18n="worldChallengeFinished">
-      Desafio Mundial concluído!
-    </h1>
-
-    <p id="resultado-experiente-subtitulo" data-i18n="worldChallengeFinishedSubtitle">
-      Você identificou corretamente as 195 bandeiras.
-    </p>
-
-    <div class="resultado-experiente-destaque">
-      <strong id="resultado-experiente-acertos">0</strong>
-      <span>/ 195</span>
-    </div>
-
-    <div class="resultado-experiente-grid">
-
-      <div>
-        <strong id="resultado-experiente-puladas">0</strong>
-        <span data-i18n="skipped">Puladas</span>
-      </div>
-
-      <div>
-        <strong id="resultado-experiente-tempo">00:00</strong>
-        <span data-i18n="totalTime">Tempo total</span>
-      </div>
-
-      <div>
-        <strong id="resultado-experiente-erros">0</strong>
-        <span data-i18n="errors">Erros</span>
-      </div>
-
-      <div>
-        <strong id="resultado-experiente-sequencia">0</strong>
-        <span data-i18n="bestStreak">Melhor sequência</span>
-      </div>
-
-      <div>
-        <strong id="resultado-experiente-moedas">0</strong>
-        <span data-i18n="worldChallengeCoinsEarned">Moedas recebidas</span>
-      </div>
-
-      <div>
-        <strong id="resultado-experiente-saldo">0</strong>
-        <span data-i18n="worldChallengeCoinBalance">Saldo</span>
-      </div>
-
-      <div>
-        <strong id="resultado-experiente-continuacao">-</strong>
-        <span data-i18n="worldChallengeContinuationUsed">Continuação</span>
-      </div>
-
-      <div>
-        <strong id="resultado-experiente-ranking">-</strong>
-        <span data-i18n="worldChallengeRankingEligibility">Ranking futuro</span>
-      </div>
-
-    </div>
-
-    <div class="resultado-botoes">
-
-      <button
-        class="btn-principal"
-        id="btn-reiniciar-experiente"
-        data-i18n="playAgain"
-      >
-        🔄 Jogar novamente
-      </button>
-
-      <button
-        class="btn-secundario"
-        id="btn-menu-experiente"
-        data-i18n="backToMenu"
-      >
-        🏠 Voltar ao menu
-      </button>
-
-    </div>
-
-    <div class="share-panel">
-      <h2 data-i18n="shareResult">Compartilhar resultado</h2>
-      <p data-i18n="shareResultPerformanceDescription">
-        Compartilhe seu resultado com seus amigos.
-      </p>
-
-      <div class="share-actions">
-        <button
-          class="btn-principal"
-          id="btn-share-experiente"
-          data-i18n="share"
-        >
-          Compartilhar
-        </button>
-
-        <button
-          class="btn-secundario"
-          id="btn-download-share-experiente"
-          data-i18n="downloadImage"
-        >
-          Baixar imagem
-        </button>
-      </div>
-
-      <span
-        class="share-feedback"
-        id="share-feedback-experiente"
-        role="status"
-        aria-live="polite"
-      ></span>
-    </div>
-
-  </div>
-
-</section>
-
-    <section class="tela-continentes" id="tela-continentes">
-
-  <button class="voltar" id="btn-voltar" data-i18n="back">
-    ← Voltar
-  </button>
-
-  <h1 data-i18n="chooseContinent">Escolha um continente</h1>
-
-  <p data-i18n="chooseContinentSubtitle">
-    Qual parte do mundo você quer explorar?
-  </p>
-
-  <div class="continentes">
-
-    <button class="continente" data-continente="south-america">
-      <span>🌎</span>
-      <strong data-i18n="southAmerica">América do Sul</strong>
-      <small class="contador-paises"></small>
-    </button>
-
-    <button class="continente" data-continente="north-america">
-      <span>🌎</span>
-      <strong data-i18n="northAmerica">América do Norte e Central</strong>
-      <small class="contador-paises"></small>
-    </button>
-
-    <button class="continente" data-continente="europe">
-      <span>🌍</span>
-      <strong data-i18n="europe">Europa</strong>
-      <small class="contador-paises"></small>
-    </button>
-
-    <button class="continente" data-continente="africa">
-      <span>🌍</span>
-      <strong data-i18n="africa">África</strong>
-      <small class="contador-paises"></small>
-    </button>
-
-    <button class="continente" data-continente="asia">
-      <span>🌏</span>
-      <strong data-i18n="asia">Ásia</strong>
-      <small class="contador-paises"></small>
-    </button>
-
-    <button class="continente" data-continente="oceania">
-      <span>🌏</span>
-      <strong data-i18n="oceania">Oceania</strong>
-      <small class="contador-paises"></small>
-    </button>
-
-  </div>
-
-</section>
-
-
-<section class="tela-jogo" id="tela-jogo">
-
-  <div class="jogo-topo">
-
-    <button class="voltar" id="btn-sair-jogo" data-i18n="exit">
-      ← Sair
-    </button>
-
-    <div class="placar">
-      <span id="progresso">1 / 4</span>
-      <strong id="pontos">0</strong>
-    </div>
-
-  </div>
-
-  <div class="pergunta">
-
-    <p data-i18n="question">
-      De qual país é esta bandeira?
-    </p>
-
-    <div class="bandeira">
-      <img
-        id="bandeira-atual"
-        src=""
-        alt="Bandeira do país"
-        data-i18n-alt="flagImageAlt"
-      >
-    </div>
-
-    <div class="alternativas" id="alternativas"></div>
-
-  </div>
-
-</section>
-
-
-  <section class="tela-resultado" id="tela-resultado">
-
-  <div class="resultado-card">
-
-    <div class="resultado-icone" id="resultado-icone">🏆</div>
-
-    <h1 data-i18n="gameCompleted">
-      Partida concluída!
-    </h1>
-
-    <p
-      class="resultado-mensagem"
-      id="resultado-mensagem"
-      data-i18n="excellent"
-    >
-      Excelente resultado!
-    </p>
-
-    <p
-      class="resultado-motivacao"
-      id="resultado-motivacao"
-      aria-live="polite"
-    ></p>
-
-    <div class="resultado-numero">
-      <strong id="resultado-pontos">0</strong>
-      <span id="resultado-total">/ 4</span>
-    </div>
-
-    <div class="resultado-percentual" id="resultado-percentual">
-      0%
-    </div>
-
-    <div
-      class="resultado-resumo"
-      id="resultado-resumo"
-      aria-label="Resumo da partida"
-      data-i18n-aria-label="matchSummaryLabel"
-    ></div>
-
-    <div
-      class="resultado-recorde"
-      id="resultado-recorde"
-      data-i18n="newRecord"
-    >
-      🏅 Novo recorde!
-    </div>
-
-    <div
-      class="resultado-conquistas"
-      id="resultado-conquistas"
-      aria-live="polite"
-      hidden
-    >
-      <strong data-i18n="achievementUnlocked">
-        Conquista desbloqueada
-      </strong>
-      <div id="resultado-conquistas-lista"></div>
-    </div>
-
-    <div class="resultado-botoes">
-
-      <button
-        class="btn-principal"
-        id="btn-jogar-novamente"
-        data-i18n="playAgain"
-      >
-        🔄 Jogar novamente
-      </button>
-
-      <button
-        class="btn-secundario"
-        id="btn-outro-continente"
-        data-i18n="chooseAnotherContinent"
-      >
-        🌍 Escolher outro continente
-      </button>
-
-    </div>
-
-    <div class="share-panel">
-      <h2 data-i18n="shareResult">Compartilhar resultado</h2>
-      <p data-i18n="shareResultScoreDescription">
-        Compartilhe seu resultado com seus amigos.
-      </p>
-
-      <div class="share-actions">
-        <button
-          class="btn-principal"
-          id="btn-share-result"
-          data-i18n="share"
-        >
-          Compartilhar
-        </button>
-
-        <button
-          class="btn-secundario"
-          id="btn-download-share"
-          data-i18n="downloadImage"
-        >
-          Baixar imagem
-        </button>
-      </div>
-
-      <span
-        class="share-feedback"
-        id="share-feedback"
-        role="status"
-        aria-live="polite"
-      ></span>
-    </div>
-
-    <div class="challenge-result">
-      <h2 data-i18n="challengeFriendTitle">Desafie um amigo</h2>
-      <p data-i18n="challengeFriendDescription">
-        Gere um código para outra pessoa jogar exatamente a mesma
-        sequência de bandeiras.
-      </p>
-
-      <button
-        class="btn-secundario"
-        id="btn-generate-challenge"
-        data-i18n="generateCode"
-      >
-        Gerar código
-      </button>
-
-      <div
-        class="challenge-code-box"
-        id="challenge-code-box"
-      >
-        <strong id="challenge-code">FG-W20-82K7P</strong>
-        <button
-          class="btn-secundario"
-          id="btn-copy-challenge"
-          data-i18n="copy"
-        >
-          Copiar
-        </button>
-        <span
-          id="challenge-copy-feedback"
-          data-i18n="codeCopied"
-          role="status"
-          aria-live="polite"
-        >Código copiado</span>
-      </div>
-
-      <div class="challenge-metrics">
-        <div>
-          <span data-i18n="time">Tempo</span>
-          <strong id="challenge-time">00:00</strong>
+      </section>
+
+      <section class="tela-continentes" id="tela-continentes">
+        <h1 data-i18n="chooseContinent">Escolha o continente</h1>
+        <div id="ranked-option-continents" class="card-item hidden" style="padding: 15px; margin-bottom: 20px;">
+           <label style="display: flex; align-items: center; justify-content: space-between; cursor: pointer; font-weight: 700;">
+              <span data-i18n="rankedMatchToggle">Valer para o Ranking</span>
+              <input type="checkbox" id="toggle-ranked-continents" style="width: 24px; height: 24px;">
+           </label>
         </div>
-        <div>
-          <span data-i18n="correctAnswers">Acertos</span>
-          <strong id="challenge-correct">0</strong>
-        </div>
-        <div>
-          <span data-i18n="errors">Erros</span>
-          <strong id="challenge-errors">0</strong>
-        </div>
-        <div>
-          <span data-i18n="streak">Sequência</span>
-          <strong id="challenge-streak">0</strong>
-        </div>
-      </div>
-
-      <p
-        class="challenge-comparison"
-        id="challenge-comparison"
-        aria-live="polite"
-      ></p>
-    </div>
-
-  </div>
-<!-- =========================
-     RODAPÉ
-========================= -->
-
-<footer class="app-footer">
-
-  <button
-    class="footer-link"
-    id="btn-about"
-    data-i18n="about">
-    ℹ️ Sobre
-  </button>
-
-  <button
-    class="footer-link"
-    id="btn-privacy"
-    data-i18n="privacyPolicy">
-    Política de Privacidade
-  </button>
-
-  <button
-    class="footer-link"
-    id="btn-profile"
-    data-i18n="profileLocal">
-    Perfil local
-  </button>
-
-  <button
-    class="footer-link"
-    id="btn-achievements"
-    data-i18n="achievements">
-    Conquistas
-  </button>
-
-  <div class="app-version">
-    <span data-i18n="version">Versão</span>
-    <strong>1.0.0</strong>
-  </div>
-
-</footer>
-
-</section>
-
-<!-- =========================
-     ABOUT
-========================= -->
-
-<section
-  class="tela-about"
-  id="tela-about">
-
-  <div class="card">
-
-    <button
-      class="voltar"
-      id="btn-fechar-about"
-      data-i18n="back">
-      ← Voltar
-    </button>
-
-    <h1 data-i18n="about">
-      Sobre
-    </h1>
-
-    <div id="about-content">
-
-      <p class="about-intro" data-i18n="aboutIntro">
-        O Flag Game foi criado para ajudar pessoas a aprenderem as
-        bandeiras dos 195 países e fortalecerem seus conhecimentos
-        de geografia de forma simples e divertida.
-      </p>
-
-      <div class="about-list">
-
-        <div>
-          <strong data-i18n="freeTitle">Gratuito</strong>
-          <span data-i18n="freeDescription">O aplicativo é gratuito para todos.</span>
-        </div>
-
-        <div>
-          <strong data-i18n="noAdsTitle">Sem anúncios</strong>
-          <span data-i18n="noAdsDescription">A experiência foi pensada sem distrações.</span>
-        </div>
-
-        <div>
-          <strong data-i18n="independentTitle">Projeto independente</strong>
-          <span data-i18n="independentDescription">Feito com foco em simplicidade, aprendizado e manutenção.</span>
-        </div>
-
-        <div>
-          <strong data-i18n="geographyLearningTitle">Aprendizado de geografia</strong>
-          <span data-i18n="geographyLearningDescription">Um incentivo para reconhecer países, continentes e culturas.</span>
-        </div>
-
-      </div>
-
-      <div class="about-meta">
-        <div>
-          <span data-i18n="appVersion">Versão do aplicativo</span>
-          <strong>1.0.0</strong>
-        </div>
-
-        <div>
-          <span data-i18n="credits">Créditos</span>
-          <strong>Flag Game</strong>
-        </div>
-      </div>
-
-    </div>
-
-  </div>
-
-</section>
-
-<!-- =========================
-     PROFILE
-========================= -->
-
-<section
-  class="tela-profile"
-  id="tela-profile">
-
-  <div class="card profile-card">
-
-    <button
-      class="voltar"
-      id="btn-fechar-profile"
-      data-i18n="back">
-      ← Voltar
-    </button>
-
-    <h1 class="profile-title" data-i18n="profileLocal">
-      Perfil local
-    </h1>
-
-    <div id="profile-content">
-
-      <p class="profile-intro" data-i18n="profileIntro">
-        Seu progresso fica salvo apenas neste dispositivo.
-      </p>
-
-      <div class="ranking-identity" data-requires-capability="supportsGlobalLeaderboards">
-        <strong data-i18n="rankingIdentityTitle">Identidade para ranking futuro</strong>
-
-        <label>
-          <span data-i18n="playerId">ID do jogador</span>
-          <input
-            type="text"
-            id="ranking-player-id"
-            readonly
-          >
-        </label>
-
-        <label>
-          <span data-i18n="nickname">Nickname</span>
-          <input
-            type="text"
-            id="ranking-nickname"
-            maxlength="24"
-            placeholder="Seu apelido"
-            data-i18n-placeholder="nicknamePlaceholder"
-            autocomplete="off"
-          >
-        </label>
-
-        <label>
-          <span data-i18n="country">País</span>
-          <input
-            type="text"
-            id="ranking-country"
-            maxlength="2"
-            placeholder="BR"
-            autocomplete="off"
-          >
-        </label>
-
-        <button
-          class="btn-secundario"
-          id="btn-save-ranking-player"
-          data-i18n="saveLocalIdentity"
-        >
-          Salvar identidade local
-        </button>
-
-        <span id="ranking-player-feedback" role="status" aria-live="polite"></span>
-      </div>
-
-      <div class="play-games-panel" data-requires-capability="supportsPlayGames">
-        <strong data-i18n="playGamesStatusTitle">Google Play Games</strong>
-        <span
-          id="play-games-status"
-          role="status"
-          aria-live="polite"
-          data-i18n="playGamesStatusChecking"
-        >
-          Verificando status...
-        </span>
-        <div class="play-games-actions">
-          <button
-            class="btn-secundario"
-            id="btn-open-play-leaderboards"
-            type="button"
-            data-requires-capability="supportsGlobalLeaderboards"
-            data-i18n="openPlayGamesLeaderboards"
-          >
-            Abrir ranking
+        <div class="continentes">
+          <button class="continente" data-continente="south-america">
+            <span class="icone">🌎</span>
+            <div class="cont-info">
+              <strong data-i18n="southAmerica">América do Sul</strong>
+            </div>
           </button>
-          <button
-            class="btn-secundario"
-            id="btn-open-play-achievements"
-            type="button"
-            data-requires-capability="supportsOfficialAchievements"
-            data-i18n="openPlayGamesAchievements"
-          >
-            Abrir conquistas
+          <button class="continente" data-continente="north-america">
+            <span class="icone">🌎</span>
+            <div class="cont-info">
+              <strong data-i18n="northAmerica">América do Norte</strong>
+            </div>
+          </button>
+          <button class="continente" data-continente="europe">
+            <span class="icone">🌍</span>
+            <div class="cont-info">
+              <strong data-i18n="europe">Europa</strong>
+            </div>
+          </button>
+          <button class="continente" data-continente="africa">
+            <span class="icone">🌍</span>
+            <div class="cont-info">
+              <strong data-i18n="africa">África</strong>
+            </div>
+          </button>
+          <button class="continente" data-continente="asia">
+            <span class="icone">🌏</span>
+            <div class="cont-info">
+              <strong data-i18n="asia">Ásia</strong>
+            </div>
+          </button>
+          <button class="continente" data-continente="oceania">
+            <span class="icone">🌏</span>
+            <div class="cont-info">
+              <strong data-i18n="oceania">Oceania</strong>
+            </div>
           </button>
         </div>
+        <button class="btn-exit" id="btn-voltar" style="margin-top: 15px;" data-i18n="back">← Voltar</button>
+      </section>
+
+      <section class="tela-mundo" id="tela-mundo">
+        <h1 data-i18n="worldGameTitle" style="text-align: center;">Mundo inteiro</h1>
+        <div id="ranked-option-world" class="card-item hidden" style="padding: 15px; margin-bottom: 20px;">
+           <label style="display: flex; align-items: center; justify-content: space-between; cursor: pointer; font-weight: 700;">
+              <span data-i18n="rankedMatchToggle">Valer para o Ranking</span>
+              <input type="checkbox" id="toggle-ranked-world" style="width: 24px; height: 24px;">
+           </label>
+        </div>
+        <p data-i18n="worldGameSubtitle" style="text-align: center; color: var(--color-text-muted); margin-bottom: 25px;">Quantas bandeiras você quer tentar acertar?</p>
+
+        <div class="grade-quantidades">
+          <button class="card-quantidade" data-quantidade="10">
+            <span class="num">10</span>
+            <span class="txt" data-i18n="flags">bandeiras</span>
+          </button>
+
+          <button class="card-quantidade" data-quantidade="20">
+            <span class="num">20</span>
+            <span class="txt" data-i18n="flags">bandeiras</span>
+          </button>
+
+          <button class="card-quantidade" data-quantidade="50">
+            <span class="num">50</span>
+            <span class="txt" data-i18n="flags">bandeiras</span>
+          </button>
+
+          <button class="card-quantidade" data-quantidade="195">
+            <span class="num">195</span>
+            <span class="txt" data-i18n="flags">bandeiras</span>
+          </button>
+        </div>
+        <button class="btn-exit" id="btn-voltar-mundo" style="margin-top: 20px;" data-i18n="back">← Voltar</button>
+      </section>
+
+      <section class="tela-desafio-amigos" id="tela-desafio-amigos">
+        <h1 data-i18n="challengeFriends" style="text-align: center;">Desafio entre Amigos</h1>
+        <p data-i18n="challengeFriendsDescription" style="text-align: center; color: var(--color-text-muted); margin-bottom: 20px;">Insira o código recebido para jogar o desafio de um amigo.</p>
+
+        <div class="challenge-friends-panel">
+          <div class="card-item" style="padding: 30px 20px; text-align: center;">
+            <input type="text" id="challenge-code-input" placeholder="FG-XXXXXXXX"
+                   autocomplete="off" autocapitalize="characters" spellcheck="false"
+                   data-i18n-placeholder="challengeCodePlaceholder"
+                   style="text-align: center; font-size: 26px; font-weight: 800; letter-spacing: 2px; color: var(--color-primary); border-radius: 20px; border: 3px solid #e2e8f0; padding: 20px; width: 100%; margin-bottom: 20px;">
+            <button class="btn-main" id="btn-play-challenge" data-i18n="playChallenge">Jogar Desafio</button>
+            <p id="challenge-entry-feedback" class="challenge-feedback" aria-live="polite"></p>
+          </div>
+        </div>
+
+        <button class="btn-exit" id="btn-voltar-amigos" data-i18n="back">← Voltar</button>
+      </section>
+
+      <section class="tela-jogo" id="tela-jogo">
+        <div class="jogo-header">
+          <div style="display: flex; flex-direction: column; gap: 4px;">
+            <div class="placar-pill" id="progresso">1 / 10</div>
+            <span id="ranked-indicator" class="ranked-badge hidden" data-i18n="rankedIndicator">Classificada</span>
+          </div>
+          <div class="controls-cluster">
+            <button class="icon-btn" id="btn-som-jogo" style="width: 38px; height: 38px;">🔊</button>
+          </div>
+        </div>
+        <div class="stage">
+          <div class="flag-card">
+            <img id="bandeira-atual" src="" alt="Bandeira" data-i18n-alt="flagImageAlt">
+          </div>
+          <div class="options-grid" id="alternativas"></div>
+        </div>
+        <div class="exit-container">
+          <button class="btn-exit" id="btn-sair-jogo" data-i18n="exit">← Sair</button>
+        </div>
+      </section>
+
+      <section class="tela-resultado" id="tela-resultado">
+        <div class="res-card">
+          <span class="res-badge" id="resultado-icone">🏆</span>
+          <h1 id="resultado-mensagem">Parabéns!</h1>
+          <div class="res-score">
+            <strong id="resultado-pontos">0</strong>
+            <span id="resultado-total">/ 10</span>
+          </div>
+          <div id="resultado-percentual" style="font-weight: 700; color: #64748b; margin-bottom: 20px;">100%</div>
+          <div class="res-grid" id="resultado-resumo"></div>
+
+          <button class="btn-main" id="btn-jogar-novamente" data-i18n="playAgain">Jogar Novamente</button>
+          <button class="btn-secundario" id="btn-create-friend-challenge" data-i18n="challengeFriendAction">Desafiar um amigo</button>
+          <div class="generated-challenge hidden" id="result-challenge-box">
+            <span data-i18n="challengeCodeLabel">Código do desafio</span>
+            <output id="result-challenge-code">FG-XXXXXXXX</output>
+            <p data-i18n="challengeSharePrompt">Compartilhe o código para disputar a mesma sequência.</p>
+            <div class="challenge-share-actions">
+              <button class="btn-secundario" id="btn-copy-result-challenge-code" data-i18n="copyCode">Copiar código</button>
+              <button class="btn-secundario" id="btn-share-result-challenge-code" data-i18n="shareChallenge">Compartilhar desafio</button>
+            </div>
+          </div>
+          <p class="challenge-feedback" id="result-challenge-feedback" aria-live="polite"></p>
+          <button class="btn-secundario" id="btn-outro-continente">Mudar Modo</button>
+          <button class="btn-secundario" id="btn-share-result" style="margin-top: 10px;" data-i18n="share">Compartilhar</button>
+        </div>
+      </section>
+
+      <div class="challenge-code-modal hidden" id="challenge-code-modal" role="dialog" aria-modal="true" aria-labelledby="challenge-code-modal-title">
+        <div class="challenge-code-modal__backdrop" id="challenge-code-modal-backdrop"></div>
+        <div class="challenge-code-modal__card">
+          <button class="challenge-code-modal__close" id="btn-close-challenge-code-modal" type="button" aria-label="Fechar" data-i18n-aria-label="close">×</button>
+          <h2 id="challenge-code-modal-title" data-i18n="challengeCodeLabel">Código do desafio</h2>
+          <output id="challenge-code-modal-code">FG-XXXXXXXX</output>
+          <p data-i18n="challengeSharePrompt">Compartilhe o código para disputar a mesma sequência.</p>
+          <div class="challenge-code-modal__actions">
+            <button class="btn-main" id="btn-copy-challenge-code-modal" type="button" data-i18n="copyCode">Copiar código</button>
+            <button class="btn-secundario" id="btn-share-challenge-code-modal" type="button" data-i18n="shareChallenge">Compartilhar desafio</button>
+          </div>
+        </div>
       </div>
 
-      <div class="profile-grid">
-
-        <div class="profile-stat profile-stat--games">
-          <span data-i18n="gamesPlayed">Partidas jogadas</span>
-          <strong id="profile-games">0</strong>
+      <div class="account-delete-modal hidden" id="account-delete-modal" role="dialog" aria-modal="true" aria-labelledby="account-delete-modal-title" aria-describedby="account-delete-modal-desc">
+        <div class="account-delete-modal__backdrop" id="account-delete-modal-backdrop"></div>
+        <div class="account-delete-modal__card" role="document">
+          <h2 id="account-delete-modal-title" data-i18n="accountDeletionTitle">Exclusão de conta</h2>
+          <p id="account-delete-modal-desc" class="account-delete-modal__lead" data-i18n="accountDeleteIrreversible">Esta ação é irreversível.</p>
+          <div class="account-delete-modal__body">
+            <p data-i18n="accountDeleteDataRemoved">Seu perfil, login, ranking, resultados e vínculos pessoais serão excluídos ou anonimizados.</p>
+            <p data-i18n="accountDeleteRecordsRetained">Registros mínimos de transação podem ser preservados para suporte, prevenção de fraude, estorno e obrigações legais.</p>
+            <p data-i18n="accountDeleteLocalProgressRemoved">O progresso local vinculado à conta também será removido deste dispositivo.</p>
+          </div>
+          <label class="account-delete-modal__check">
+            <input type="checkbox" id="account-delete-understand">
+            <span data-i18n="accountDeleteUnderstand">Confirmo que compreendo que esta ação não pode ser desfeita.</span>
+          </label>
+          <label class="account-delete-modal__label" for="account-delete-confirm-input">
+            <span data-i18n="accountDeleteTypeWord">Digite a palavra de confirmação</span>
+            <strong id="account-delete-confirm-word" class="account-delete-modal__word">EXCLUIR</strong>
+          </label>
+          <input type="text" id="account-delete-confirm-input" autocomplete="off" spellcheck="false" data-i18n-placeholder="accountDeleteConfirmPlaceholder" placeholder="Digite a palavra">
+          <p class="account-delete-modal__status" id="account-delete-status" aria-live="assertive"></p>
+          <div class="account-delete-modal__actions">
+            <button class="btn-secundario" id="btn-cancel-delete-account" type="button" data-i18n="cancel">Cancelar</button>
+            <button class="btn-danger" id="btn-confirm-delete-account" type="button" disabled data-i18n="continue">Continuar</button>
+          </div>
         </div>
-
-        <div class="profile-stat profile-stat--correct">
-          <span data-i18n="totalCorrect">Total de acertos</span>
-          <strong id="profile-correct">0</strong>
-        </div>
-
-        <div class="profile-stat profile-stat--average">
-          <span data-i18n="averagePercent">Percentual médio</span>
-          <strong id="profile-average">0%</strong>
-        </div>
-
-        <div class="profile-stat profile-stat--streak">
-          <span data-i18n="bestStreak">Melhor sequência</span>
-          <strong id="profile-streak">0</strong>
-        </div>
-
-        <div class="profile-stat profile-stat--time">
-          <span data-i18n="averageTime">Tempo médio</span>
-          <strong id="profile-time">00:00</strong>
-        </div>
-
-        <div class="profile-stat profile-stat--mode">
-          <span data-i18n="favoriteMode">Modo favorito</span>
-          <strong id="profile-mode">-</strong>
-        </div>
-
       </div>
 
-      <div class="profile-continents">
-        <span data-i18n="continentsCompleted">Continentes concluídos</span>
-        <strong id="profile-continents">0 / 6</strong>
-      </div>
+      <section class="tela-profile" id="tela-profile">
+        <div class="profile-header">
+          <h1 class="profile-title" data-i18n="profileLocal">Perfil</h1>
+        </div>
 
-      <p class="profile-note" data-i18n="profileNote">
-        Arquitetura preparada para sincronização futura, sem login nesta versão.
-      </p>
+        <div class="card-item" id="account-status-card">
+          <strong data-i18n="account">Minha Conta</strong>
+          <div id="auth-logged-out" class="hidden">
+             <p style="font-size: 14px; margin-bottom: 12px; color: var(--color-text-muted);" data-i18n="onboardingLoginDesc">Entre para salvar seu progresso e entrar no ranking global.</p>
+             <button class="btn-main" id="btn-login-google" data-i18n="loginWithGoogle">Entrar com Google</button>
+          </div>
+          <div id="auth-logged-in" class="hidden">
+             <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 15px;">
+                <div id="user-avatar" style="width: 48px; height: 48px; border-radius: 50%; background: #e2e8f0; overflow: hidden;">
+                   <img src="" alt="" style="width: 100%; height: 100%;" class="hidden">
+                </div>
+                <div>
+                   <strong id="user-name" style="margin: 0; font-size: 18px; color: var(--color-text);">Jogador</strong>
+                   <span id="user-email" style="font-size: 12px; color: var(--color-text-muted);">---</span>
+                </div>
+             </div>
+             <p id="cloud-profile-error" class="hidden" style="color: var(--color-danger); font-size: 12px; font-weight: 600; margin-bottom: 15px;"></p>
+             <button class="btn-secundario" id="btn-logout" style="margin-top: 0;" data-i18n="logout">Sair da Conta</button>
+          </div>
+        </div>
 
-    </div>
+        <div class="card-item account-security-card hidden" id="account-deletion-card">
+          <strong data-i18n="accountSecurityTitle">Conta e segurança</strong>
+          <p class="account-security-card__text" data-i18n="accountDeleteProfileHint">Exclua sua conta e os dados pessoais vinculados ao Flag Game.</p>
+          <button class="btn-danger" id="btn-open-delete-account" type="button" data-i18n="deleteMyAccount">Excluir minha conta</button>
+          <p class="challenge-feedback" id="account-delete-profile-feedback" aria-live="polite"></p>
+        </div>
 
+        <div class="card-item">
+          <strong data-i18n="nickname">Nome de Jogador</strong>
+          <input type="text" id="profile-nickname" style="margin-bottom: 8px;" data-i18n-placeholder="nicknamePlaceholder">
+          <button class="btn-main" id="btn-save-nick" style="padding: 12px; font-size: 15px;" data-i18n="saveNickname">Salvar Nome</button>
+          <p class="challenge-feedback" id="profile-nickname-feedback" aria-live="polite"></p>
+        </div>
 
+        <div class="card-item">
+          <strong data-i18n="languageSelectLabel">Idioma</strong>
+          <select id="profile-idioma" style="margin-bottom: 0;">
+            <option value="de">🇩🇪 Deutsch</option>
+            <option value="en">🇺🇸 English</option>
+            <option value="es">🇪🇸 Español</option>
+            <option value="fr">🇫🇷 Français</option>
+            <option value="id">🇮🇩 Indonesia</option>
+            <option value="it">🇮🇹 Italiano</option>
+            <option value="nl">🇳🇱 Nederlands</option>
+            <option value="pl">🇵🇱 Polski</option>
+            <option value="pt-BR">🇧🇷 Português</option>
+            <option value="tr">🇹🇷 Türkçe</option>
+            <option value="vi">🇻🇳 Tiếng Việt</option>
+            <option value="ru">🇷🇺 Русский</option>
+            <option value="uk">🇺🇦 Українська</option>
+            <option value="ar">🇸🇦 العربية</option>
+            <option value="hi">🇮🇳 हिन्दी</option>
+            <option value="bn">🇧🇩 বাংলা</option>
+            <option value="th">🇹🇭 ไทย</option>
+            <option value="ja">🇯🇵 日本語</option>
+            <option value="ko">🇰🇷 한국어</option>
+            <option value="zh-CN">🇨🇳 中文</option>
+          </select>
+        </div>
+
+        <div id="privacy-settings-card" class="card-item hidden">
+           <strong data-i18n="privacySettings">Privacidade do Perfil</strong>
+           <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 15px;">
+              <label style="display: flex; align-items: center; justify-content: space-between; cursor: pointer;">
+                 <span data-i18n="showDetailedStats">Mostrar estatísticas detalhadas</span>
+                 <input type="checkbox" id="privacy-detailed" style="width: 20px; height: 20px;">
+              </label>
+              <label style="display: flex; align-items: center; justify-content: space-between; cursor: pointer;">
+                 <span data-i18n="showRecentActivity">Mostrar atividade recente</span>
+                 <input type="checkbox" id="privacy-activity" style="width: 20px; height: 20px;">
+              </label>
+           </div>
+        </div>
+
+        <button class="btn-exit" id="btn-fechar-profile" data-i18n="back">← Voltar</button>
+      </section>
+
+      <section class="tela-rankings" id="tela-rankings">
+        <h1 data-i18n="rankingsTitle">Rankings Globais</h1>
+
+        <div class="ranking-filters">
+            <select id="ranking-filter-mode">
+                <option value="world" data-i18n="modeWorld">Mundo</option>
+                <option value="continent" data-i18n="modeContinent">Continente</option>
+            </select>
+            <select id="ranking-filter-variation">
+                <!-- Populado via JS -->
+            </select>
+        </div>
+
+        <div class="ranking-user-card hidden" id="ranking-user-pos">
+            <span class="rank-pos">---</span>
+            <div class="rank-user-info">
+                <strong class="rank-name" data-i18n="you">Você</strong>
+                <span class="rank-score">0 pts</span>
+            </div>
+        </div>
+
+        <div id="ranking-list" class="ranking-list">
+            <!-- Items via JS -->
+            <div class="loading-placeholder" data-i18n="loading">Carregando...</div>
+        </div>
+
+        <button class="btn-secundario hidden" id="btn-load-more-rankings" data-i18n="loadMore">Carregar mais</button>
+        <button class="btn-exit" id="btn-fechar-rankings" data-i18n="back">← Voltar</button>
+      </section>
+
+    </main>
   </div>
 
-</section>
-
-<!-- =========================
-     ACHIEVEMENTS
-========================= -->
-
-<section
-  class="tela-achievements"
-  id="tela-achievements">
-
-  <div class="card achievements-card">
-
-    <button
-      class="voltar"
-      id="btn-fechar-achievements"
-      data-i18n="back">
-      ← Voltar
-    </button>
-
-    <h1 class="achievements-title" data-i18n="achievements">
-      Conquistas
-    </h1>
-
-    <div id="achievements-content">
-
-      <div class="achievements-summary">
-        <div class="achievement-summary-card achievement-summary-card--count">
-          <span data-i18n="achievementsUnlocked">Desbloqueadas</span>
-          <strong id="achievements-count">0 / 0</strong>
-        </div>
-
-        <div class="achievement-summary-card achievement-summary-card--points">
-          <span data-i18n="achievementPoints">Pontos</span>
-          <strong id="achievements-points">0</strong>
+  <div id="nav-backdrop" class="nav-backdrop"></div>
+  <aside id="nav-menu" class="nav-menu">
+    <div class="menu-header">
+      <div id="menu-user-info" class="menu-user-info">
+        <div id="menu-avatar" class="menu-avatar"></div>
+        <div class="menu-user-details">
+          <strong id="menu-user-name">Perfil local</strong>
+          <span id="menu-user-email">---</span>
         </div>
       </div>
-
-      <div
-        class="achievements-list"
-        id="achievements-list"
-        role="list"
-      ></div>
-
-      <p class="achievements-note" data-i18n="achievementsNote">
-        Os dados ficam salvos localmente e já estão organizados para
-        um futuro ranking online.
-      </p>
-
     </div>
+    <nav class="menu-items">
+      <button class="menu-item" id="menu-btn-profile">
+        <span class="icon">👤</span> <span data-i18n="myProfile">Meu perfil</span>
+      </button>
+      <button class="menu-item" id="menu-btn-rankings">
+        <span class="icon">📊</span> <span data-i18n="rankings">Rankings</span>
+      </button>
+      <button class="menu-item" id="menu-btn-challenges">
+        <span class="icon">🤝</span> <span data-i18n="challengeFriends">Desafios</span>
+      </button>
+      <hr>
+      <button class="menu-item hidden" id="menu-btn-logout">
+        <span class="icon">🚪</span> <span data-i18n="logout">Sair da conta</span>
+      </button>
+    </nav>
+  </aside>
 
-  </div>
-
-</section>
-
-<!-- =========================
-     PRIVACY POLICY
-========================= -->
-
-<section
-  class="tela-privacy"
-  id="tela-privacy">
-
-  <div class="card">
-
-    <button
-      class="voltar"
-      id="btn-fechar-privacy"
-      data-i18n="back">
-      ← Voltar
-    </button>
-
-    <h1 data-i18n="privacyPolicy">
-      Política de Privacidade
-    </h1>
-
-    <div id="privacy-content">
-
-      <p class="privacy-intro" data-i18n="privacyIntro">
-        Esta política descreve como o Flag Game trata informações
-        no aplicativo.
-      </p>
-
-      <div class="privacy-list">
-
-        <div>
-          <strong data-i18n="privacyNoPersonalDataTitle">Nenhum dado pessoal é coletado</strong>
-          <span data-i18n="privacyNoPersonalDataDescription">O Flag Game não solicita, armazena ou envia dados pessoais.</span>
-        </div>
-
-        <div>
-          <strong data-i18n="privacyNoLoginTitle">Não existe login</strong>
-          <span data-i18n="privacyNoLoginDescription">O aplicativo não possui conta de usuário, cadastro ou autenticação.</span>
-        </div>
-
-        <div>
-          <strong data-i18n="privacyNoTrackingTitle">Não existe rastreamento</strong>
-          <span data-i18n="privacyNoTrackingDescription">Não usamos cookies, analytics, identificadores de publicidade ou rastreadores.</span>
-        </div>
-
-        <div>
-          <strong data-i18n="privacyLocalRecordsTitle">Recordes apenas locais</strong>
-          <span data-i18n="privacyLocalRecordsDescription">Os recordes ficam salvos somente no dispositivo, usando armazenamento local.</span>
-        </div>
-
-        <div>
-          <strong data-i18n="privacyOfflineTitle">Funciona offline</strong>
-          <span data-i18n="privacyOfflineDescription">As principais funcionalidades do aplicativo continuam disponíveis sem internet.</span>
-        </div>
-
-      </div>
-
-      <p class="privacy-contact">
-        <span data-i18n="privacyContact">Dúvidas sobre privacidade:</span>
-        <a href="mailto:flaggameapp@gmail.com">
-          flaggameapp@gmail.com
-        </a>
-      </p>
-
-      <p class="privacy-updated" data-i18n="privacyUpdated">
-        Última atualização: 11 de julho de 2026.
-      </p>
-
-    </div>
-
-  </div>
-
-</section>
-  </main>
-
-<script src="js/countries.js"></script>
-<script src="js/storage.js"></script>
-<script src="js/platform-capabilities.js"></script>
-<script src="js/play-games-adapter.js"></script>
-<script src="js/cloud-save.js"></script>
-<script src="js/locales-data.js"></script>
-<script src="js/i18n.js"></script>
-<script src="js/profile.js"></script>
-<script src="js/challenges.js"></script>
-<script src="js/ranking.js"></script>
-<script src="js/play-games-competitive.js"></script>
-<script src="js/firebase-auth.js"></script>
-<script src="js/sync.js"></script>
-<script src="js/world-challenge.js"></script>
-<script src="js/world-challenge-storage.js"></script>
-<script src="js/world-challenge-wallet.js"></script>
-<script src="js/world-challenge-checkpoint.js"></script>
-<script src="js/app.js"></script>
-
+  <script src="js/countries.js"></script>
+  <script src="js/libs/supabase.js"></script>
+  <script src="js/supabase-client.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/platform-capabilities.js"></script>
+  <script src="js/locales-data.js"></script>
+  <script src="js/i18n.js"></script>
+  <script src="js/ranking.js"></script>
+  <script src="js/profile.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/ranked-games.js"></script>
+  <script src="js/rankings-api.js"></script>
+  <script src="js/public-profiles.js"></script>
+  <script src="js/profile-migration.js"></script>
+  <script src="js/play-games-adapter.js"></script>
+  <script src="js/cloud-save.js"></script>
+  <script src="js/challenges.js"></script>
+  <script src="js/player-challenges.js"></script>
+  <script src="js/play-games-competitive.js"></script>
+  <script src="js/world-challenge-storage.js"></script>
+  <script src="js/world-challenge-checkpoint.js"></script>
+  <script src="js/world-challenge.js"></script>
+  <script src="js/app.js"></script>
 </body>
 </html>

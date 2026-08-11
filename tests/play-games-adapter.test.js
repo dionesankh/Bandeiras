@@ -73,6 +73,7 @@ async function testNativePluginSuccess() {
         FlagGamePlayGames: {
           isAvailable: async () => ({
             available: true,
+            configured: true,
             status: "available",
             playServicesStatus: 0
           }),
@@ -135,12 +136,13 @@ async function testNativePluginSuccess() {
   });
 
   assert.equal(adapter.available, true);
-  assert.equal(adapter.leaderboards, true);
-  assert.equal(adapter.cloudSave, true);
-  assert.equal(adapter.achievements, true);
+  assert.equal(adapter.leaderboards, false);
+  assert.equal(adapter.cloudSave, false);
+  assert.equal(adapter.achievements, false);
 
   const availability = await adapter.isAvailable();
   assert.equal(availability.available, true);
+  assert.equal(availability.configured, true);
   assert.equal(availability.playServicesStatus, 0);
 
   const auth = await adapter.getAuthenticationStatus();

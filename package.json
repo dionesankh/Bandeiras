@@ -1,0 +1,22 @@
+{
+  "name": "flag-game",
+  "version": "1.2.0",
+  "private": true,
+  "description": "Flag Game Android Capacitor project.",
+  "scripts": {
+    "simulate": "node scripts/build-android.js && npx cap copy android && npx cap run android",
+    "build:android": "node scripts/build-android.js",
+    "test": "node tests/build-android-env.test.js && node tests/platform-capabilities.test.js && node tests/play-games-adapter.test.js && node tests/cloud-save.test.js && node tests/play-games-competitive.test.js && node tests/challenges.test.js && node tests/ranked-challenges.test.js && node tests/world-challenge-storage.test.js && node tests/world-challenge-checkpoint.test.js && node tests/world-challenge.test.js && node tests/account-deletion.test.js && node tests/i18n-audit.test.js"
+  },
+  "dependencies": {
+    "@capacitor/android": "8.4.2",
+    "@capacitor/core": "8.4.2",
+    "@capacitor/share": "^8.0.1",
+    "@flaggame/capacitor-google-auth": "file:plugins/capacitor-google-auth",
+    "@flaggame/capacitor-play-games": "file:plugins/capacitor-play-games",
+    "@supabase/supabase-js": "2.44.4"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "8.4.2"
+  }
+}

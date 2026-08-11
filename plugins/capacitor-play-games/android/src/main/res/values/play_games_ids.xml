@@ -1,16 +1,18 @@
 <resources>
-    <string name="leaderboard_world_challenge_progress" translatable="false"></string>
-    <string name="leaderboard_world_challenge_streak" translatable="false"></string>
-    <string name="leaderboard_world_challenge_fastest_195" translatable="false"></string>
+    <string name="game_services_project_id" translatable="false">&lt;PLAY_GAMES_PROJECT_ID&gt;</string>
 
-    <string name="achievement_world_challenge_first_attempt" translatable="false"></string>
-    <string name="achievement_world_challenge_countries_25" translatable="false"></string>
-    <string name="achievement_world_challenge_countries_50" translatable="false"></string>
-    <string name="achievement_world_challenge_countries_100" translatable="false"></string>
-    <string name="achievement_world_challenge_countries_150" translatable="false"></string>
-    <string name="achievement_world_challenge_countries_195" translatable="false"></string>
-    <string name="achievement_world_challenge_streak_50" translatable="false"></string>
-    <string name="achievement_world_challenge_streak_100" translatable="false"></string>
-    <string name="achievement_world_challenge_complete_one_life" translatable="false"></string>
-    <string name="achievement_world_challenge_complete_no_lives_lost" translatable="false"></string>
+    <string name="leaderboard_world_challenge_progress" translatable="false">&lt;PLAY_GAMES_LEADERBOARD_WORLD_CHALLENGE_PROGRESS_ID&gt;</string>
+    <string name="leaderboard_world_challenge_streak" translatable="false">&lt;PLAY_GAMES_LEADERBOARD_WORLD_CHALLENGE_STREAK_ID&gt;</string>
+    <string name="leaderboard_world_challenge_fastest_195" translatable="false">&lt;PLAY_GAMES_LEADERBOARD_WORLD_CHALLENGE_FASTEST_195_ID&gt;</string>
+
+    <string name="achievement_world_challenge_first_attempt" translatable="false">&lt;PLAY_GAMES_ACHIEVEMENT_WORLD_CHALLENGE_FIRST_ATTEMPT_ID&gt;</string>
+    <string name="achievement_world_challenge_countries_25" translatable="false">&lt;PLAY_GAMES_ACHIEVEMENT_WORLD_CHALLENGE_COUNTRIES_25_ID&gt;</string>
+    <string name="achievement_world_challenge_countries_50" translatable="false">&lt;PLAY_GAMES_ACHIEVEMENT_WORLD_CHALLENGE_COUNTRIES_50_ID&gt;</string>
+    <string name="achievement_world_challenge_countries_100" translatable="false">&lt;PLAY_GAMES_ACHIEVEMENT_WORLD_CHALLENGE_COUNTRIES_100_ID&gt;</string>
+    <string name="achievement_world_challenge_countries_150" translatable="false">&lt;PLAY_GAMES_ACHIEVEMENT_WORLD_CHALLENGE_COUNTRIES_150_ID&gt;</string>
+    <string name="achievement_world_challenge_countries_195" translatable="false">&lt;PLAY_GAMES_ACHIEVEMENT_WORLD_CHALLENGE_COUNTRIES_195_ID&gt;</string>
+    <string name="achievement_world_challenge_streak_50" translatable="false">&lt;PLAY_GAMES_ACHIEVEMENT_WORLD_CHALLENGE_STREAK_50_ID&gt;</string>
+    <string name="achievement_world_challenge_streak_100" translatable="false">&lt;PLAY_GAMES_ACHIEVEMENT_WORLD_CHALLENGE_STREAK_100_ID&gt;</string>
+    <string name="achievement_world_challenge_complete_one_life" translatable="false">&lt;PLAY_GAMES_ACHIEVEMENT_WORLD_CHALLENGE_COMPLETE_ONE_LIFE_ID&gt;</string>
+    <string name="achievement_world_challenge_complete_no_lives_lost" translatable="false">&lt;PLAY_GAMES_ACHIEVEMENT_WORLD_CHALLENGE_COMPLETE_NO_LIVES_LOST_ID&gt;</string>
 </resources>

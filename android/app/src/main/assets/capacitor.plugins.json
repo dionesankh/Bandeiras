@@ -1,0 +1,14 @@
+[
+	{
+		"pkg": "@capacitor/share",
+		"classpath": "com.capacitorjs.plugins.share.SharePlugin"
+	},
+	{
+		"pkg": "@flaggame/capacitor-google-auth",
+		"classpath": "app.flaggame.googleauth.FlagGameGoogleAuthPlugin"
+	},
+	{
+		"pkg": "@flaggame/capacitor-play-games",
+		"classpath": "app.flaggame.playgames.FlagGamePlayGamesPlugin"
+	}
+]

@@ -129,26 +129,6 @@ function createSnapshot(overrides = {}) {
       migrations: { backups: [] }
     },
     achievements: { unlocked: {} },
-    rewardedMilestones: {},
-    wallet: {
-      schemaVersion: 1,
-      createdAt: "2026-07-19T09:00:00.000Z",
-      updatedAt: "2026-07-19T10:00:00.000Z",
-      balance: 5,
-      lifetimeEarned: 5,
-      lifetimeSpent: 0,
-      rewardedMilestones: { 25: true },
-      transactionHistory: [
-        {
-          transactionId: "tx-a",
-          type: "earn",
-          amount: 5,
-          reason: "world_challenge_milestone_25",
-          runId: "run-a",
-          createdAt: "2026-07-19T10:00:00.000Z"
-        }
-      ]
-    },
     recentHistory: [],
     preferences: {
       updatedAt: "2026-07-19T10:00:00.000Z",
@@ -167,12 +147,10 @@ function createSnapshot(overrides = {}) {
 
 function createContext(storage, nativeResults = {}) {
   const WorldChallengeStorage = require("../js/world-challenge-storage.js");
-  const WorldChallengeWallet = require("../js/world-challenge-wallet.js");
 
   return {
     FlagGameStorage: storage,
     FlagGameWorldChallengeStorage: WorldChallengeStorage,
-    FlagGameWorldChallengeWallet: WorldChallengeWallet,
     FlagGameProfile: {
       readProfile() {
         return storage.getJson("flagGameProfile", createSnapshot().profile);
@@ -227,20 +205,6 @@ function testMergeKeepsBestRecordsAndUniqueIds() {
           finishedAt: "2026-07-19T11:00:00.000Z"
         }
       ]
-    },
-    wallet: {
-      ...createSnapshot().wallet,
-      transactionHistory: [
-        createSnapshot().wallet.transactionHistory[0],
-        {
-          transactionId: "tx-b",
-          type: "spend",
-          amount: 30,
-          reason: "world_challenge_continue",
-          runId: "run-b",
-          createdAt: "2026-07-19T11:00:00.000Z"
-        }
-      ]
     }
   });
   const merged = CloudSave.mergeSnapshots(local, remote);
@@ -248,10 +212,6 @@ function testMergeKeepsBestRecordsAndUniqueIds() {
   assert.equal(merged.worldChallenge.stats.bestCorrectCountries, 195);
   assert.equal(merged.worldChallenge.stats.fastestCompletionMs, 900000);
   assert.equal(merged.worldChallenge.history.length, 2);
-  assert.equal(merged.wallet.transactionHistory.length, 2);
-  assert.equal(merged.wallet.balance, 0);
-  assert.equal(merged.wallet.lifetimeEarned, 5);
-  assert.equal(merged.wallet.lifetimeSpent, 30);
 }
 
 function testPreferencesUseNewestUpdatedAt() {

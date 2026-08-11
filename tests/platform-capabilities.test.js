@@ -109,9 +109,9 @@ function testAndroidWithPlugin() {
     FlagGameNativePlatform: "android",
     FlagGamePlayGames: {
       available: true,
-      leaderboards: true,
-      cloudSave: true,
-      achievements: true
+      leaderboards: false,
+      cloudSave: false,
+      achievements: false
     },
     navigator: { userAgent: "Android" },
     location: { protocol: "https:" }
@@ -119,9 +119,9 @@ function testAndroidWithPlugin() {
   const capabilities = platform.getCapabilities();
 
   assert.equal(capabilities.supportsPlayGames, true);
-  assert.equal(capabilities.supportsGlobalLeaderboards, true);
-  assert.equal(capabilities.supportsCloudSave, true);
-  assert.equal(capabilities.supportsOfficialAchievements, true);
+  assert.equal(capabilities.supportsGlobalLeaderboards, false);
+  assert.equal(capabilities.supportsCloudSave, false);
+  assert.equal(capabilities.supportsOfficialAchievements, false);
 }
 
 function testConfiguredPlayStoreUrl() {

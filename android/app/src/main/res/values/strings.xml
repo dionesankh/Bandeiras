@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Flag Game</string>
+    <string name="title_activity_main">Flag Game</string>
+    <string name="package_name">app.flaggame</string>
+    <string name="custom_url_scheme">app.flaggame</string>
+</resources>

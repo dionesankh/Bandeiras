@@ -22,5 +22,6 @@ repositories {
 
 dependencies {
     compileOnly project(':capacitor-android')
+    compileOnly "androidx.appcompat:appcompat:${safeExtGet('androidxAppCompatVersion', '1.7.1')}"
     implementation 'com.google.android.gms:play-services-games-v2:21.0.0'
 }

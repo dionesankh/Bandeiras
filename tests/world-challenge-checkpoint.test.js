@@ -236,7 +236,7 @@ function testElapsedTimeIncludesBackgroundPeriod() {
   assert.equal(restored.state.elapsedSeconds, 30);
 }
 
-function testCheckpointDoesNotWriteHistoryOrWallet() {
+function testCheckpointDoesNotWriteProfileHistory() {
   const storage = createMemoryStorage();
   const state = createGame("no-side-effects");
 
@@ -274,7 +274,7 @@ const tests = [
   testConsecutiveEventsAreDeduped,
   testRestoreKeepsRunStateAndInvalidatesRanking,
   testElapsedTimeIncludesBackgroundPeriod,
-  testCheckpointDoesNotWriteHistoryOrWallet,
+  testCheckpointDoesNotWriteProfileHistory,
   testClearCheckpointOnAbandon
 ];
 

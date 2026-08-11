@@ -1,0 +1,9 @@
+{
+	"appId": "app.flaggame",
+	"appName": "Flag Game",
+	"webDir": "dist/android",
+	"server": {
+		"androidScheme": "https"
+	},
+	"android": {}
+}
